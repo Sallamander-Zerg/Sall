@@ -1,0 +1,37 @@
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <errno.h>
+    #include <unistd.h>
+    #include <sys/types.h>
+    #include <sys/wait.h>
+int    main(int argc,char *argv[])
+    {
+    pid_t pid;
+    int rv;
+    int status;
+    pid=fork();
+  
+    switch(pid) {
+    case -1:
+    	perror("fork"); /* произошла ошибка */
+    	exit(1); /*выход из родительского процесса*/
+    case 0:
+    	printf("PARENT: Это процесс-дочерний!\n");
+    	//printf(" CHILD: Мой PID — %d\n", getpid());
+    	//char *arr[2];
+    	//arr[0] =0;
+    	//arr[1] = NULL;
+    	//printf("%s", argv[1]);
+    	execvp(argv[1], &argv[1]);
+    	exit(1);
+    
+    default:
+    	printf("PARENT: Это процесс-родитель!\n");
+    	wait(&status);
+    	printf("PARENT: Код возврата потомка:%d\n",WEXITSTATUS(status));
+    }
+    
+    }
+   
+
+
